@@ -16,10 +16,20 @@ using Microsoft.eShopWeb.Web;
 using Microsoft.eShopWeb.Web.Configuration;
 using Microsoft.eShopWeb.Web.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Serilog;
+using Serilog.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.AddConsole();
+//builder.Logging.AddConsole();
+builder.Services.AddLogging();
+builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+ {
+     loggerConfiguration
+         .Enrich.FromLogContext()
+         .WriteTo.Console();
+ });
 
 Microsoft.eShopWeb.Infrastructure.Dependencies.ConfigureServices(builder.Configuration, builder.Services);
 
@@ -51,7 +61,6 @@ builder.Services.AddRouting(options =>
     // IOutboundParameterTransformer implementation
     options.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
 });
-
 builder.Services.AddMvc(options =>
 {
     options.Conventions.Add(new RouteTokenTransformerConvention(
