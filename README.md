@@ -1,2 +1,2 @@
 # MyCommentsForeShopOnWeb
-对这个项目的源码进行分析学习以及总结
+个人学习用的。
